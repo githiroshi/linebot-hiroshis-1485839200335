@@ -33,11 +33,6 @@ foreach ($events as $event) {
     error_log('Non text message has come');
     continue;
   }
-
-  //ドコモの雑談データ取得
-  $response = chat($event->getText());
-  replyTextMessage($bot, $event->getReplyToken(), $response);
-
   // $bot->replyText($event->getReplyToken(), makeTemplate($event->getText()));
 //   $profile = $bot->getProfile($event->getUserId())->getJSONDecodedBody();
 // $message = $profile["displayName"] . "さん、おはようございます！今日も頑張りましょう！";
@@ -82,50 +77,25 @@ foreach ($events as $event) {
 //       "非表示", "never")
 //     );
 
-// $columnArray = array();
-//   for($i = 0; $i < 5; $i++) {
-//     $actionArray = array();
-//     array_push($actionArray, new LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder (
-//       "ボタン" . $i . "-" . 1, "c-" . $i . "-" . 1));
-//     array_push($actionArray, new LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder (
-//       "ボタン" . $i . "-" . 2, "c-" . $i . "-" . 2));
-//     array_push($actionArray, new LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder (
-//       "ボタン" . $i . "-" . 3, "c-" . $i . "-" . 3));
-//     $column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder (
-//       ($i + 1) . "日後の天気",
-//       "晴れ",
-//       "https://" . $_SERVER["HTTP_HOST"] .  "/imgs/template.jpg",
-//       $actionArray
-//     );
-//     array_push($columnArray, $column);
-//   }
-//   replyCarouselTemplate($bot, $event->getReplyToken(),"今後の天気予報", $columnArray);
-
-
-
-}
-
-//ドコモの雑談APIから雑談データを取得
-function chat($text) {
-    // docomo chatAPI
-    $api_key = getenv('DOCOMO_API_KEY');
-    $api_url = sprintf('https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY=%s', $api_key);
-    $req_body = array('utt' => $text);
-
-    $headers = array(
-        'Content-Type: application/json; charset=UTF-8',
+$columnArray = array();
+  for($i = 0; $i < 5; $i++) {
+    $actionArray = array();
+    array_push($actionArray, new LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder (
+      "ボタン" . $i . "-" . 1, "c-" . $i . "-" . 1));
+    array_push($actionArray, new LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder (
+      "ボタン" . $i . "-" . 2, "c-" . $i . "-" . 2));
+    array_push($actionArray, new LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder (
+      "ボタン" . $i . "-" . 3, "c-" . $i . "-" . 3));
+    $column = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder (
+      ($i + 1) . "日後の天気",
+      "晴れ",
+      "https://" . $_SERVER["HTTP_HOST"] .  "/imgs/template.jpg",
+      $actionArray
     );
-    $options = array(
-        'http'=>array(
-            'method'  => 'POST',
-            'header'  => implode("\r\n", $headers),
-            'content' => json_encode($req_body),
-            )
-        );
-    $stream = stream_context_create($options);
-    $res = json_decode(file_get_contents($api_url, false, $stream));
+    array_push($columnArray, $column);
+  }
+  replyCarouselTemplate($bot, $event->getReplyToken(),"今後の天気予報", $columnArray);
 
-    return $res->utt;
 }
 
 function replyTextMessage($bot, $replyToken, $text) {

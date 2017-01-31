@@ -1,9 +1,9 @@
 applications:
-- path: .
+- buildpack: https://github.com/githiroshi/linebot-hiroshis-1485839200335.git
+  path: .
   memory: 128M
   instances: 1
   domain: mybluemix.net
   name: linebot-hiroshis
   host: linebot-hiroshis
   disk_quota: 1024M
-  buildpack: https://github.com/githiroshi/linebot.git
